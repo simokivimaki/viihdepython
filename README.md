@@ -5,7 +5,7 @@ Elisa Viihde – Python-skriptejä. Toimii ainakin Python versiolla 2.7.
 
 Skriptit kysyvät luvan ennen kuin tekevät siirto/poisto -operaatioita.
 
-Kirjautustunnisteita tai -keksiä ei tallenneta, joten salasana kysytään
+Kirjautumistunnisteita tai -keksiä ei tallenneta, joten salasana kysytään
 erikseen jokaisella käyttökerralla.
 
 delete_duplicates.py
