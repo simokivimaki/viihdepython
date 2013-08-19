@@ -14,6 +14,10 @@ delete_duplicates.py
 Etsii ja poistaa duplikaatit halutusta kansiosta (tai kaikista tallenteista).
 Säilyttää ensimmäisen tallenteen.
 
+Huomaa, että duplikaattien tunnistus tehdään ohjelman nimen ja kuvauksen
+perusteella, joten esimerkiksi "Yle Uutiset" / "Mukana talous ja kulttuuri"
+-nimiset lähetykset tunnistetaan väärin duplikaateiksi.
+
 move_simpsonit.py
 -----------------
 
