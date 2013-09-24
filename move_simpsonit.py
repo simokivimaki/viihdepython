@@ -3,6 +3,7 @@
 
 import elisaviihde
 import simpsonitorgparser
+from datetime import datetime
 
 def main():
     
@@ -13,20 +14,25 @@ def main():
     folder_name = raw_input('Elisa Viihde Simpsonit folder name [Simpsonit]: ')
     if not folder_name:
         folder_name = 'Simpsonit'
+        
+    season_folder_name = raw_input('prefix for season folder name or "None" [Season ]: ')
+    if not season_folder_name:
+        season_folder_name = 'Season '
+    elif season_folder_name == 'None':
+        season_folder_name = ''
 
     simpsonit_folder = e.find_folder(folder_name)
     if simpsonit_folder is None:
         print 'Folder', folder_name, 'not found'
         return
     
-    episodes = simpsonitorgparser.parse()
+    episodes = simpsonitorgparser.parseSchedule()
     simpsonit_folder_id = simpsonit_folder['id']
     root_simponit_recordings = e.ls_recordings(simpsonit_folder_id)
     
     to_be_moved = [] # list of (recording, episode) pairs
     for recording in root_simponit_recordings:
-        program = e.get_program_info(recording['program_id'])
-        episode = find_episode(episodes, program)
+        episode = find_episode(episodes, recording)
         if episode:
             to_be_moved.append((recording, episode))
     print 'Found', len(to_be_moved), 'episodes to be moved'
@@ -36,30 +42,30 @@ def main():
         for move in to_be_moved:
             recording = move[0]
             episode = move[1]
-            target_folder = e.find_or_create_subfolder('Season ' + str(episode['season']),
+            target_folder = e.find_or_create_subfolder(season_folder_name + str(episode['season']),
                                                        simpsonit_folder_id)
             status = e.move(recording['id'], target_folder['id'])
-            print 'MOVED:', status, recording['start_time'], episode['name_fi'], 'to', target_folder['name']
+            print 'MOVED:', status, recording['start_time'], episode['name'], 'to', target_folder['name']
         print "Moving done."
     else:
         print "Moving canceled."
         
     
-def find_episode(episodes, program):
-    short_text = program['short_text']
-    short_text_canonical = short_text.lower().replace(' -', ',') # fix for "Bart - luottohenkilö"
+def find_episode(episodes, recording):
     result = []
+    recording_dt = datetime.strptime(recording['start_time'][3:], "%d.%m.%Y %H:%M")
     for episode in episodes:
-        if short_text_canonical.startswith(episode['name_fi'].lower()):
+        if recording['name'].startswith('Simpsonit') and episode['datetime'] == recording_dt:
             result.append(episode)
+    
     if len(result) > 1:
-        print 'SKIPPED: found more than 1 episodes for', short_text, result
+        print 'SKIPPED: found more than 1 episodes for', recording['start_time'], result
     elif len(result) == 1:
         episode = result[0]
-        print 'MATCH:', program['start_time'], episode['name_fi'], '->', 'Season', episode['season']
+        print 'MATCH:', recording['start_time'], episode['datetime'], episode['name'], '->', 'Season', episode['season']
         return episode
     else:
-        print 'SKIPPED: found 0 episodes for', short_text, program['id']
+        print 'SKIPPED: found 0 episodes for', recording['start_time']
 
 if __name__ == '__main__':
     main()
