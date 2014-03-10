@@ -11,6 +11,7 @@ def main():
     
     folder_name = raw_input('Look from folder (enter for all): ')
     if folder_name:
+	folder_name = unicode(folder_name, 'utf-8')
         folder = e.find_folder(folder_name)
         if folder:
             folderid = folder['id']
