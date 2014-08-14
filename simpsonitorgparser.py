@@ -74,8 +74,9 @@ def handle_schedule_tr(tr):
         time_string = schedule_b.string[:5]
         dt = datetime.strptime(date_string + ' ' + time_string, "%d.%m.%Y %H:%M")
         season_episode_name = list(schedule_b.find_next_sibling('a').stripped_strings)
+        #print "season_episode_name", season_episode_name
         season_episode = season_episode_name[0][:-2]
-        name = season_episode_name[1]
+        name = season_episode_name[1] if len(season_episode_name) > 1 else None
         m = re.match(r'(\d+)x(\d+)', season_episode)
         season = int(m.group(1))
         episode = int(m.group(2))
