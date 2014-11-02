@@ -5,18 +5,20 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def parseSchedule():
+
+def parse_schedule():
     schedules = []
     session = requests.Session()
-    fromYear = 2009
-    tillYear = datetime.today().year
-    for year in range(fromYear, tillYear+1):
-        schedules.extend(parseYear(session, year))
+    from_year = 2009
+    till_year = datetime.today().year
+    for year in range(from_year, till_year+1):
+        schedules.extend(parse_year(session, year))
     print 'Simpsonit.org: Done.'
     return schedules
 
+
 # Hakee Suomessa esitettyjen Simpsonien aikataulut valitulta vuodelta
-def parseYear(session, year):
+def parse_year(session, year):
     schedules = []
     url = 'http://simpsonit.org/jaksot/tv-esitykset-suomessa/' + str(year)
     soup = BeautifulSoup(session.get(url).content)
@@ -25,6 +27,7 @@ def parseYear(session, year):
             schedules.extend(handle_schedule_tr(tr))
     print 'Simpsonit.org: Found', len(schedules), 'schedules for year', year
     return schedules
+
 
 def handle_schedule_tr(tr):
     schedules = []
@@ -47,6 +50,7 @@ def handle_schedule_tr(tr):
                           'name': name})
     return schedules
 
+
 # for testing
 if __name__ == '__main__':
-    print parseSchedule()
+    print parse_schedule()

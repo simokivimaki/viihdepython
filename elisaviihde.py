@@ -2,8 +2,8 @@ import requests
 import urllib2
 import getpass
 
-class Elisaviihde():
 
+class Elisaviihde():
     url = 'http://elisaviihde.fi/etvrecorder/'
 
     # please call login after init
@@ -18,9 +18,9 @@ class Elisaviihde():
 
         params = {'username': username, 'password': password, 'savelogin': None, 'ajax': True}
         r = self.session.get(Elisaviihde.url + 'login.sl', params=params)
-        loginOk = r.text == 'TRUE'
-        print 'Elisa Viihde Login', 'OK' if loginOk else 'FAILED'
-        return loginOk
+        login_ok = r.text == 'TRUE'
+        print 'Elisa Viihde Login', 'OK' if login_ok else 'FAILED'
+        return login_ok
 
     def epg(self):
         # TODO showdate parameter?
@@ -97,7 +97,7 @@ class Elisaviihde():
     def ls_recordings(self, folderid):
         return get_recordings_from_ready_data(self.ls(folderid))
     
-    def ls_recordings_recursive(self, folderid='', result = []):
+    def ls_recordings_recursive(self, folderid, result):
         ready_data = self.ls(folderid)
         folders = get_folders_from_ready_data(ready_data)
         recordings = get_recordings_from_ready_data(ready_data)
@@ -106,11 +106,14 @@ class Elisaviihde():
             self.ls_recordings_recursive(folder['id'], result)
         return result
         
+
 def get_folders_from_ready_data(ready_data):
     return ready_data['ready_data'][0]['folders']
 
+
 def get_recordings_from_ready_data(ready_data):
     return ready_data['ready_data'][0]['recordings']
+
 
 def unquote(text):
     # %-encodings decoded (NB python 2 urllib2 does not support unicode strings)

@@ -3,15 +3,15 @@
 
 import elisaviihde
 
+
 def main():
-    
     e = elisaviihde.Elisaviihde()
     if not e.login():
         return
     
     folder_name = raw_input('Look from folder (enter for all): ')
     if folder_name:
-	folder_name = unicode(folder_name, 'utf-8')
+        folder_name = unicode(folder_name, 'utf-8')
         folder = e.find_folder(folder_name)
         if folder:
             folderid = folder['id']
@@ -19,9 +19,9 @@ def main():
             print 'Folder', folder_name, 'not found'
             return
     else:
-        folderid = '' # root folder
+        folderid = ''  # root folder
 
-    recordings = e.ls_recordings_recursive(folderid)
+    recordings = e.ls_recordings_recursive(folderid, [])
     found_duplicates = find_duplicates(e, recordings)
     
     answer = raw_input("Enter 'y' to delete duplicates, anything else to cancel: ")
@@ -47,8 +47,8 @@ def find_duplicates(e, recordings):
     recordings_dict = {}
     for recording in recordings:
         program = e.get_program_info(recording['program_id'])
-        isHD = 'hd' in program['channel'].lower()
-        key = (program['name'], program['short_text'], isHD)
+        is_hd = 'hd' in program['channel'].lower()
+        key = (program['name'], program['short_text'], is_hd)
         value = recordings_dict.get(key, [])
         value.append(recording)
         recordings_dict[key] = value

@@ -5,8 +5,8 @@ import elisaviihde
 import simpsonitorgparser
 from datetime import datetime
 
+
 def main():
-    
     e = elisaviihde.Elisaviihde()
     if not e.login():
         return
@@ -27,11 +27,11 @@ def main():
         print 'Folder', folder_name, 'not found'
         return
     
-    episodes = simpsonitorgparser.parseSchedule()
+    episodes = simpsonitorgparser.parse_schedule()
     simpsonit_folder_id = simpsonit_folder['id']
     root_simponit_recordings = e.ls_recordings(simpsonit_folder_id)
     
-    to_be_moved = [] # list of (recording, episode) pairs
+    to_be_moved = []  # list of (recording, episode) pairs
     for recording in root_simponit_recordings:
         episode = find_episode(episodes, recording)
         if episode:
