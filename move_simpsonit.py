@@ -12,6 +12,7 @@ def main():
         return
     
     folder_name = raw_input('Elisa Viihde Simpsonit folder name [Simpsonit]: ')
+    folder_name = unicode(folder_name, 'utf-8')
     if not folder_name:
         folder_name = 'Simpsonit'
         
