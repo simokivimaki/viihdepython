@@ -48,7 +48,7 @@ def find_duplicates(e, recordings):
     for recording in recordings:
         program = e.get_program_info(recording['program_id'])
         is_hd = 'hd' in program['channel'].lower()
-        key = (program['name'], program['short_text'], is_hd)
+        key = (program['name'].strip(), program['short_text'].strip(), is_hd)
         value = recordings_dict.get(key, [])
         value.append(recording)
         recordings_dict[key] = value
