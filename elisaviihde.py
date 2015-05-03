@@ -83,9 +83,10 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
         return result
 
     def create_subfolder(self, foldername, parentid):
-        params = {'parentId': parentid, 'folderName': foldername}
-        r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', data=json.dumps(params))
-        newfolderid = r.text
+        headers = {'Content-Type': 'application/json'}
+        data = {'parentId': parentid, 'folderName': foldername}
+        r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
+        newfolderid = int(r.text)
         print 'Created folder', foldername, ':', newfolderid
         return self.find_folder_by_id(newfolderid)
 
