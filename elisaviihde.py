@@ -1,10 +1,10 @@
 import requests
-import urllib2
 import getpass
+import json
 
 
 class Elisaviihde():
-    url = 'http://elisaviihde.fi/etvrecorder/'
+    url = 'https://elisaviihde.fi/'
 
     # please call login after init
     def __init__(self):
@@ -16,105 +16,116 @@ class Elisaviihde():
         if password is None:
             password = getpass.getpass('Elisa Viihde Password: ')
 
-        params = {'username': username, 'password': password, 'savelogin': None, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'login.sl', params=params)
-        login_ok = r.text == 'TRUE'
+        params = {'username': username, 'password': password}
+        r = self.session.post(Elisaviihde.url + 'api/user', data=params)
+        login_ok = r.status_code == 200
         print 'Elisa Viihde Login', 'OK' if login_ok else 'FAILED'
         return login_ok
 
-    def epg(self):
-        # TODO showdate parameter?
-        params = {'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'epg.sl', params=params)
-        programs = r.json()
-        return programs
-        
+    ''' (folders contains folders recursively)
+depth: 2
+folders: []
+hasHierarchyRecordingRules: true
+hasNewRecordings: true
+hasRecordingRules: true
+id: 1831964
+locked: false
+name: "A-studio"
+newRecordingsCount: 4
+open: false
+parentFolder: false
     '''
-    returns
-    {"ready_data":[
-      {"folders": [
-       {"id":"1831910","name":"Simpsonit","size":"28.02 GB", "has_unwatched":"true", "has_wildcards":"true", "has_pin":"","recordings_count": "35"}
-       ...
-      ],
-      "recordings": [
-        {"id":"353350198","program_id":"965921", "folder_id":"","name":"True%20Blood%20(16)","channel":"Yle HD","start_time":"ti 30.07.2013 00:05","timestamp":"2013-07-30T00:05:28+0300","viewcount":"4","length": "51"}
-        (where id is programviewid)
-        ...
-      ]}
-    
-    ]}
-    '''
-    def ls(self, folderid=''):
-        params = {'folderid': folderid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'ready.sl', params=params)
-        ready_data = r.json()
-        return ready_data
-    
-    def get_program_info(self, programid):
-        params = {'programid': programid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'program.sl', params=params)
-        program_data = r.json()
-        program_data['name'] = unquote(program_data['name'])
-        program_data['channel'] = unquote(program_data['channel'])
-        program_data['short_text'] = unquote(program_data['short_text'])
-        return program_data
-    
-    def record(self, programid):
-        params = {'programid': programid, 'record': programid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'program.sl', params=params)
-        return r.text
-    
-    def move(self, programviewid, folderid):
-        params = {'move': True, 'programviewid': programviewid, 'destination': folderid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'ready.sl', params=params)
-        return r.text
-    
-    def remove(self, programviewid):
-        params = {'removep': programviewid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'program.sl', params=params)
-        return r.text
-        
-    def create_subfolder(self, foldername, parentid=None):
-        params = {'create_subfolder': True, 'folder': foldername, 'parent': parentid, 'ajax': True}
-        r = self.session.get(Elisaviihde.url + 'ready.sl', params=params)
-        print 'Create subfolder', foldername, r.text
-        return self.find_folder(foldername, parentid)
+    def folders(self):
+        r = self.session.get(Elisaviihde.url + 'tallenteet/api/folders')
+        result = r.json()
+        return result['folders']
 
-    # Find folder by name from folder (None means root)
-    def find_folder(self, foldername, parentid=None):
-        ready_data = self.ls(parentid)
-        folders = get_folders_from_ready_data(ready_data)
-        for folder in folders:
-            if folder['name'] == foldername:
-                return folder
+    ''' (array of recordings)
+channel: "Sub"
+channelId: 42
+description: "Kauhujen talo XXV. Simpsonit sukeltavat toiseen ulottuvuuteen ja kokevat Moen johtaman "Kellopeliappelsiini"-jengin vallan. Amerikkalainen piirrossarja."
+duration: 1800
+durationMinutes: 30
+endTimeUTC: 1429034400000
+finished: true
+folderId: 1831910
+isWatched: true
+name: "Simpsonit (12)"
+programId: 1902642
+recordingId: 0
+recordingState: "finished"
+scrambled: false
+serviceName: "Sub"
+startTime: "14.04.2015 20.30"
+startTimeFormatted: "ti 14.04.2015 20.30"
+startTimeUTC: 1429032600000
+thumbnail: "http://thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
+thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
+    '''
+    def recordings(self, folderid):
+        allresults = []
+        page = 0
+        while True:
+            params = {'page': page, 'sortBy': 'startTime', 'sortOrder': 'desc', 'watchedStatus': 'all'}
+            r = self.session.get(Elisaviihde.url + 'tallenteet/api/recordings/' + str(folderid), params=params)
+            result = r.json()
+            if len(result) == 0:
+                break
+            allresults.extend(result)
+            page += 1
+        print 'Found', len(allresults), 'recordings for folder', folderid
+        return allresults
+
+    def delete(self, programid):
+        r = self.session.delete(Elisaviihde.url + 'tallenteet/api/recordings/' + str(programid))
+        result = r.status_code == 200
+        print 'Deleted recording', programid, ':', result
+        return result
+
+    def create_subfolder(self, foldername, parentid):
+        params = {'parentId': parentid, 'folderName': foldername}
+        r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', data=json.dumps(params))
+        newfolderid = r.text
+        print 'Created folder', foldername, ':', newfolderid
+        return self.find_folder_by_id(newfolderid)
+
+    def move(self, programid, folderid):
+        params = {'folderId': folderid}
+        r = self.session.put(Elisaviihde.url + 'tallenteet/api/recordings/move/' + str(programid), params=params)
+        result = r.status_code == 200
+        print 'Moved recording', programid, 'to folderid', folderid, ':', result
+        return result
+
+    def find_folder_by_name(self, foldername):
+        folders = self.folders()
+        return find_folder_recursive(folders, 'name', foldername)
+
+    def find_folder_by_id(self, folderid):
+        folders = self.folders()
+        return find_folder_recursive(folders, 'id', folderid)
     
-    def find_or_create_subfolder(self, foldername, parentid=None):
-        folder = self.find_folder(foldername, parentid)
+    def find_or_create_subfolder(self, foldername, parentid):
+        folders = self.find_folder_by_id(parentid)['folders']
+        folder = find_folder_recursive(folders, 'name', foldername)
         if folder is None:
             folder = self.create_subfolder(foldername, parentid)
         return folder
-    
-    def ls_recordings(self, folderid):
-        return get_recordings_from_ready_data(self.ls(folderid))
-    
-    def ls_recordings_recursive(self, folderid, result):
-        ready_data = self.ls(folderid)
-        folders = get_folders_from_ready_data(ready_data)
-        recordings = get_recordings_from_ready_data(ready_data)
+
+    def ls_recordings_recursive(self, folder, result):
+        recordings = self.recordings(folder['id'])
         result.extend(recordings)
-        for folder in folders:
-            self.ls_recordings_recursive(folder['id'], result)
+        subfolders = folder['folders']
+        for subfolder in subfolders:
+            self.ls_recordings_recursive(subfolder, result)
         return result
-        
-
-def get_folders_from_ready_data(ready_data):
-    return ready_data['ready_data'][0]['folders']
 
 
-def get_recordings_from_ready_data(ready_data):
-    return ready_data['ready_data'][0]['recordings']
+def find_folder_recursive(folders, key, value):
+    for folder in folders:
+        if folder[key] == value:
+            return folder
+    for folder in folders:
+        return find_folder_recursive(folder['folders'], key, value)
+    return None
 
 
-def unquote(text):
-    # %-encodings decoded (NB python 2 urllib2 does not support unicode strings)
-    return urllib2.unquote(text.encode('ascii')).decode('utf8')
