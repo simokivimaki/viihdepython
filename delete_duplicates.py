@@ -3,13 +3,18 @@
 
 import elisaviihde
 
-
 def main():
     e = elisaviihde.Elisaviihde()
-    if not e.login():
+    parser = e.argparser()
+    parser.add_argument('-f', '--folder_name')
+    parser.add_argument('-m', '--max_auto_delete')
+    params = parser.parse_args()
+    if not e.login(params):
         return
-    
-    folder_name = raw_input('Look from folder (enter for all): ')
+          
+    folder_name = params.folder_name
+    if folder_name is None:
+        folder_name = raw_input('Look from folder (enter for all): ')
     if folder_name:
         folder_name = unicode(folder_name, 'utf-8')
         folder = e.find_folder_by_name(folder_name)
@@ -22,7 +27,13 @@ def main():
     recordings = e.ls_recordings_recursive(folder, [])
     found_duplicates = find_duplicates(e, recordings)
     
-    answer = raw_input("Enter 'y' to delete duplicates, anything else to cancel: ")
+    answer = 'n'
+    if params.max_auto_delete is not None:
+        if len(found_duplicates) <= int(params.max_auto_delete):
+            answer = 'y'
+    elif len(found_duplicates) > 0:
+        answer = raw_input("Enter 'y' to delete duplicates, anything else to cancel: ")
+    
     if answer == 'y':
         for key, recordings in found_duplicates.iteritems():
             print 'Processing:', key[0], ';', key[1]
@@ -37,6 +48,7 @@ def main():
         print 'Delete duplicates done.'
     else:
         print 'Delete duplicates canceled.'
+        exit(-1)
         
     
 def find_duplicates(e, recordings):

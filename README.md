@@ -8,6 +8,11 @@ Skriptit kysyvät luvan ennen kuin tekevät siirto/poisto -operaatioita.
 Kirjautumistunnisteita tai -keksiä ei tallenneta, joten salasana kysytään
 erikseen jokaisella käyttökerralla.
 
+Scripteille voi antaa input parametreja myös komentoriviparametrien avulla 
+jos scriptejä halutaan ajaa esim. cronilla.
+
+Mahdolliset komentoriviparametrit saa näkyviin -h vivulla.
+
 delete_duplicates.py
 --------------------
 

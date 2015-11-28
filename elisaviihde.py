@@ -1,7 +1,9 @@
 import requests
 import getpass
 import json
-
+import sys
+import argparse
+import getopt
 
 class Elisaviihde():
     url = 'https://elisaviihde.fi/'
@@ -9,8 +11,23 @@ class Elisaviihde():
     # please call login after init
     def __init__(self):
         self.session = requests.Session()
+    
+    def argparser(self):
+        parser = argparse.ArgumentParser(description='Elisa viihde library scripts.')
+        parser.add_argument('-u','--user', help='username')
+        parser.add_argument('-p','--passfile', help='password file')
+        return parser
 
-    def login(self, username=None, password=None):
+    def login(self, params=None):
+        username = None
+        password = None
+        if params is not None:
+            if params.user is not None:
+                username = params.user
+            if params.passfile is not None:
+                with open (params.passfile, "r") as passfile:
+                    password=passfile.read()
+        
         if username is None:
             username = raw_input('Elisa Viihde Username: ')
         if password is None:
