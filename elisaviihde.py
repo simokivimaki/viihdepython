@@ -1,21 +1,21 @@
 import requests
 import getpass
 import json
-import sys
 import argparse
-import getopt
 
-class Elisaviihde():
+
+class Elisaviihde:
     url = 'https://elisaviihde.fi/'
 
     # please call login after init
     def __init__(self):
         self.session = requests.Session()
-    
-    def argparser(self):
+
+    @staticmethod
+    def argparser():
         parser = argparse.ArgumentParser(description='Elisa viihde library scripts.')
-        parser.add_argument('-u','--user', help='username')
-        parser.add_argument('-p','--passfile', help='password file')
+        parser.add_argument('-u', '--user', help='username')
+        parser.add_argument('-p', '--passfile', help='password file')
         return parser
 
     def login(self, params=None):
@@ -25,8 +25,8 @@ class Elisaviihde():
             if params.user is not None:
                 username = params.user
             if params.passfile is not None:
-                with open (params.passfile, "r") as passfile:
-                    password=passfile.read()
+                with open(params.passfile, "r") as passfile:
+                    password = passfile.read()
         
         if username is None:
             username = raw_input('Elisa Viihde Username: ')
@@ -145,5 +145,3 @@ def find_folder_recursive(folders, key, value):
     for folder in folders:
         return find_folder_recursive(folder['folders'], key, value)
     return None
-
-

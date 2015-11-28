@@ -8,19 +8,28 @@ from datetime import datetime
 
 def main():
     e = elisaviihde.Elisaviihde()
-    if not e.login():
+    parser = e.argparser()
+    parser.add_argument('-f', '--folder_name', help='Elisa Viihde Simpsonit folder name')
+    parser.add_argument('-s', '--season_prefix', help='prefix for season folder name')
+    params = parser.parse_args()
+    if not e.login(params):
         return
-    
-    folder_name = raw_input('Elisa Viihde Simpsonit folder name [Simpsonit]: ')
-    folder_name = unicode(folder_name, 'utf-8')
+
+    folder_name = params.folder_name
+    if folder_name is None:
+        folder_name = raw_input('Elisa Viihde Simpsonit folder name [Simpsonit]: ')
     if not folder_name:
         folder_name = 'Simpsonit'
-        
-    season_folder_name = raw_input('prefix for season folder name or "None" [Season ]: ')
+    folder_name = unicode(folder_name, 'utf-8')
+
+    season_folder_name = params.season_prefix
+    if season_folder_name is None:
+        season_folder_name = raw_input('prefix for season folder name or "None" [Season ]: ')
     if not season_folder_name:
         season_folder_name = 'Season '
     elif season_folder_name == 'None':
         season_folder_name = ''
+    season_folder_name = unicode(season_folder_name, 'utf-8')
 
     simpsonit_folder = e.find_folder_by_name(folder_name)
     if simpsonit_folder is None:
