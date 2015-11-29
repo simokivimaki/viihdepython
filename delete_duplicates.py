@@ -1,23 +1,25 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import cli
 import elisaviihde
 
 
 def main():
-    e = elisaviihde.Elisaviihde()
-    parser = e.argparser()
+    parser = cli.init_argparser()
     parser.add_argument('-f', '--folder_name')
     parser.add_argument('-m', '--max_auto_delete')
     params = parser.parse_args()
-    if not e.login(params):
+
+    username = cli.read_input(params.user, 'Elisa Viihde Username')
+    password = cli.read_password(params.passfile, 'Elisa Viihde Password')
+
+    e = elisaviihde.Elisaviihde()
+    if not e.login(username, password):
         return
           
-    folder_name = params.folder_name
-    if folder_name is None:
-        folder_name = raw_input('Look from folder (enter for all): ')
+    folder_name = cli.read_input(params.folder_name, 'Look from folder (enter for all)')
     if folder_name:
-        folder_name = unicode(folder_name, 'utf-8')
         folder = e.find_folder_by_name(folder_name)
         if folder is None:
             print 'Folder', folder_name, 'not found'
@@ -26,7 +28,7 @@ def main():
         folder = e.find_folder_by_id(0)
 
     recordings = e.ls_recordings_recursive(folder, [])
-    found_duplicates = find_duplicates(e, recordings)
+    found_duplicates = find_duplicates(recordings)
     
     answer = 'n'
     if params.max_auto_delete is not None:
@@ -52,7 +54,7 @@ def main():
         exit(-1)
         
     
-def find_duplicates(e, recordings):
+def find_duplicates(recordings):
     # arrange programs as hastable {(name, description): [recording, recording], ...}
     recordings_dict = {}
     for recording in recordings:
@@ -66,7 +68,7 @@ def find_duplicates(e, recordings):
     duplicate_recordings_dict = {}
     for key, recordings in recordings_dict.iteritems():
         if len(recordings) > 1:
-            recordings.sort(key=lambda recording: (not recording['channel'].endswith('HD'), recording['startTimeUTC']))
+            recordings.sort(key=lambda r: (not r['channel'].endswith('HD'), r['startTimeUTC']))
             duplicate_recordings_dict[key] = recordings
             print 'Found duplicates for:', key[0], ';', key[1]
             for recording in recordings:
