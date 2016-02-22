@@ -1,7 +1,7 @@
 viihdepython
 ============
 
-Elisa Viihde – Python-skriptejä. Toimii ainakin Python versiolla 2.7 ja 
+Elisa Viihde – Python-skriptejä. Toimii ainakin Python versioilla 2.7 ja 
 3.5.
 
 Skriptit kysyvät luvan ennen kuin tekevät siirto/poisto -operaatioita.
