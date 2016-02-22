@@ -1,5 +1,7 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
 import requests
 import json
+
 
 
 class Elisaviihde:
@@ -13,7 +15,7 @@ class Elisaviihde:
         params = {'username': username, 'password': password}
         r = self.session.post(Elisaviihde.url + 'api/user', data=params)
         login_ok = r.status_code == 200
-        print 'Elisa Viihde Login', 'OK' if login_ok else 'FAILED'
+        print('Elisa Viihde Login', 'OK' if login_ok else 'FAILED')
         return login_ok
 
     ''' (folders contains folders recursively)
@@ -67,13 +69,13 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
                 break
             allresults.extend(result)
             page += 1
-        print 'Found', len(allresults), 'recordings for folder', folderid
+        print('Found', len(allresults), 'recordings for folder', folderid)
         return allresults
 
     def delete(self, programid):
         r = self.session.delete(Elisaviihde.url + 'tallenteet/api/recordings/' + str(programid))
         result = r.status_code == 200
-        print 'Deleted recording', programid, ':', result
+        print('Deleted recording', programid, ':', result)
         return result
 
     def create_subfolder(self, foldername, parentid):
@@ -81,14 +83,14 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
         data = {'parentId': parentid, 'folderName': foldername}
         r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
         newfolderid = int(r.text)
-        print 'Created folder', foldername, ':', newfolderid
+        print('Created folder', foldername, ':', newfolderid)
         return self.find_folder_by_id(newfolderid)
 
     def move(self, programid, folderid):
         params = {'folderId': folderid}
         r = self.session.put(Elisaviihde.url + 'tallenteet/api/recordings/move/' + str(programid), params=params)
         result = r.status_code == 200
-        print 'Moved recording', programid, 'to folderid', folderid, ':', result
+        print('Moved recording', programid, 'to folderid', folderid, ':', result)
         return result
 
     def find_folder_by_name(self, foldername):

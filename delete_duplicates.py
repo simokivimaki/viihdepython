@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, division, print_function, unicode_literals
 import cli
 import elisaviihde
+from user_input import get_input
+
 
 
 def main():
@@ -22,7 +25,7 @@ def main():
     if folder_name:
         folder = e.find_folder_by_name(folder_name)
         if folder is None:
-            print 'Folder', folder_name, 'not found'
+            print('Folder', folder_name, 'not found')
             return
     else:
         folder = e.find_folder_by_id(0)
@@ -35,22 +38,22 @@ def main():
         if len(found_duplicates) <= int(params.max_auto_delete):
             answer = 'y'
     elif len(found_duplicates) > 0:
-        answer = raw_input("Enter 'y' to delete duplicates, anything else to cancel: ")
+        answer = get_input("Enter 'y' to delete duplicates, anything else to cancel: ")
     
     if answer == 'y':
-        for key, recordings in found_duplicates.iteritems():
-            print 'Processing:', key[0], ';', key[1]
+        for key, recordings in found_duplicates.items():
+            print('Processing:', key[0], ';', key[1])
             first = True
             for recording in recordings:
                 if first:
-                    print 'Kept first', recording['startTime'], recording['channel']
+                    print('Kept first', recording['startTime'], recording['channel'])
                     first = False
                 else:
                     status = e.delete(recording['programId'])
-                    print 'DELETED', status, recording['startTime'], recording['channel']
-        print 'Delete duplicates done.'
+                    print('DELETED', status, recording['startTime'], recording['channel'])
+        print('Delete duplicates done.')
     else:
-        print 'Delete duplicates canceled.'
+        print('Delete duplicates canceled.')
         exit(-1)
         
     
@@ -66,15 +69,17 @@ def find_duplicates(recordings):
     # hastable {(name, description): [recording, recording], ...}
     # where recordings ordered by not-HD, startTimeUTC timestamp
     duplicate_recordings_dict = {}
-    for key, recordings in recordings_dict.iteritems():
+    
+    for key, recordings in recordings_dict.items():
         if len(recordings) > 1:
             recordings.sort(key=lambda r: (not r['channel'].endswith('HD'), r['startTimeUTC']))
             duplicate_recordings_dict[key] = recordings
-            print 'Found duplicates for:', key[0], ';', key[1]
+            print('Found duplicates for:', key[0], ';', key[1])
             for recording in recordings:
-                print '*', recording['startTime'], recording['channel']
-    print 'Total', len(duplicate_recordings_dict)
+                print('*', recording['startTime'], recording['channel'])
+    print('Total', len(duplicate_recordings_dict))
     return duplicate_recordings_dict
+
 
 if __name__ == '__main__':
     main()

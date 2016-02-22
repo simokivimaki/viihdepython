@@ -1,10 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, division, print_function, unicode_literals
 import cli
 import elisaviihde
 import simpsonitorgparser
 from datetime import datetime
+from user_input import get_input
+
 
 
 def main():
@@ -31,7 +34,7 @@ def main():
 
     simpsonit_folder = e.find_folder_by_name(folder_name)
     if simpsonit_folder is None:
-        print 'Folder', folder_name, 'not found'
+        print('Folder', folder_name, 'not found')
         return
     
     episodes = simpsonitorgparser.parse_schedule()
@@ -43,20 +46,24 @@ def main():
         episode = find_episode(episodes, recording)
         if episode:
             to_be_moved.append((recording, episode))
-    print 'Found', len(to_be_moved), 'episodes to be moved'
+    print('Found', len(to_be_moved), 'episodes to be moved')
 
-    answer = raw_input("Enter 'y' to continue, anything else to cancel: ")
+    answer = get_input("Enter 'y' to continue, anything else to cancel: ")
     if answer == 'y':
         for move in to_be_moved:
             recording = move[0]
             episode = move[1]
             target_folder = e.find_or_create_subfolder(season_folder_name + str(episode['season']),
                                                        simpsonit_folder_id)
-            status = e.move(recording['programId'], target_folder['id'])
-            print 'MOVED:', status, recording['startTime'], episode['name'], 'to', target_folder['name']
-        print "Moving done."
+            try:
+                status = e.move(recording['programId'], target_folder['id'])
+            except TypeError:
+                print("Failed to move", recording['programId'])
+                continue
+            print('MOVED:', status, recording['startTime'], episode['name'], 'to', target_folder['name'])
+        print("Moving done.")
     else:
-        print "Moving canceled."
+        print("Moving canceled.")
         
     
 def find_episode(episodes, recording):
@@ -67,13 +74,13 @@ def find_episode(episodes, recording):
             result.append(episode)
     
     if len(result) > 1:
-        print 'SKIPPED: found more than 1 episodes for', recording['startTime'], result
+        print('SKIPPED: found more than 1 episodes for', recording['startTime'], result)
     elif len(result) == 1:
         episode = result[0]
-        print 'MATCH:', recording['startTime'], episode['datetime'], episode['name'], '->', 'Season', episode['season']
+        print('MATCH:', recording['startTime'], episode['datetime'], episode['name'], '->', 'Season', episode['season'])
         return episode
     else:
-        print 'SKIPPED: found 0 episodes for', recording['startTime']
+        print('SKIPPED: found 0 episodes for', recording['startTime'])
 
 if __name__ == '__main__':
     main()
