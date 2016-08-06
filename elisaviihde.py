@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 import requests
 import json
-
+import time
 
 
 class Elisaviihde:
@@ -84,6 +84,7 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
         r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
         newfolderid = int(r.text)
         print('Created folder', foldername, ':', newfolderid)
+        time.sleep(1) # find_folder_by_id might not find recently created folder
         return self.find_folder_by_id(newfolderid)
 
     def move(self, programid, folderid):
