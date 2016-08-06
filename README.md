@@ -1,7 +1,8 @@
 viihdepython
 ============
 
-Elisa Viihde – Python-skriptejä. Toimii ainakin Python versiolla 2.7.
+Elisa Viihde – Python-skriptejä. Toimii ainakin Python versioilla 2.7 ja 
+3.5.
 
 Skriptit kysyvät luvan ennen kuin tekevät siirto/poisto -operaatioita.
 
@@ -29,8 +30,13 @@ move_simpsonit.py
 Siirtää Simpsonit-kansion tallenteet alikansioihin kausien mukaisesti.
 Käyttää simpsonit.orgin tietoja jaotteluun.
 
-Mukana olevat kirjastot
+Riippuvuudet
 -----------------------
 
-* http://www.crummy.com/software/BeautifulSoup/ (MIT license)
-* http://python-requests.org (Apache 2 license)
+* BeautifulSoup
+* python-requests
+
+Asennus pip:llä python:
+
+$ pip install -r requirements.txt
+
