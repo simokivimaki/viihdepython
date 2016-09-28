@@ -1,0 +1,6 @@
+argparse==1.2.1
+beautifulsoup4==4.5.1
+bs4==0.0.1
+requests==2.11.1
+wsgiref==0.1.2
+ndg-httpsclient

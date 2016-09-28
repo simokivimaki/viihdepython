@@ -1,0 +1,47 @@
+running clean
+'build/lib.linux-x86_64-2.7' does not exist -- can't clean it
+'build/bdist.linux-x86_64' does not exist -- can't clean it
+'build/scripts-2.7' does not exist -- can't clean it
+running bdist_wheel
+running build
+running build_py
+creating build
+creating build/lib.linux-x86_64-2.7
+copying elisaviihde.py -> build/lib.linux-x86_64-2.7
+copying simpsonitorgparser.py -> build/lib.linux-x86_64-2.7
+copying cli.py -> build/lib.linux-x86_64-2.7
+warning: build_py: byte-compiling is disabled, skipping.
+
+running build_scripts
+creating build/scripts-2.7
+copying and adjusting scripts/delete_duplicates.py -> build/scripts-2.7
+copying and adjusting scripts/move_simpsonit.py -> build/scripts-2.7
+changing mode of build/scripts-2.7/delete_duplicates.py from 644 to 755
+changing mode of build/scripts-2.7/move_simpsonit.py from 644 to 755
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64
+creating build/bdist.linux-x86_64/wheel
+copying build/lib.linux-x86_64-2.7/elisaviihde.py -> build/bdist.linux-x86_64/wheel
+copying build/lib.linux-x86_64-2.7/simpsonitorgparser.py -> build/bdist.linux-x86_64/wheel
+copying build/lib.linux-x86_64-2.7/cli.py -> build/bdist.linux-x86_64/wheel
+warning: install_lib: byte-compiling is disabled, skipping.
+
+running install_egg_info
+running egg_info
+writing requirements to viihdepython.egg-info/requires.txt
+writing viihdepython.egg-info/PKG-INFO
+writing top-level names to viihdepython.egg-info/top_level.txt
+writing dependency_links to viihdepython.egg-info/dependency_links.txt
+reading manifest file 'viihdepython.egg-info/SOURCES.txt'
+writing manifest file 'viihdepython.egg-info/SOURCES.txt'
+Copying viihdepython.egg-info to build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0-py2.7.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data
+creating build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data/scripts
+copying build/scripts-2.7/delete_duplicates.py -> build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data/scripts
+copying build/scripts-2.7/move_simpsonit.py -> build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data/scripts
+changing mode of build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data/scripts/delete_duplicates.py to 755
+changing mode of build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.data/scripts/move_simpsonit.py to 755
+creating build/bdist.linux-x86_64/wheel/viihdepython-1.0.dev0.dist-info/WHEEL
