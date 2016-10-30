@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 
-import cli
-import elisaviihde
-
+from viihdepython import cli
+from viihdepython import elisaviihde
 
 def main():
     parser = cli.init_argparser()

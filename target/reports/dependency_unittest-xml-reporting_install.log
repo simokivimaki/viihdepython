@@ -1,5 +1,0 @@
-Collecting unittest-xml-reporting
-  Using cached unittest_xml_reporting-2.1.0-py2.py3-none-any.whl
-Requirement already satisfied (use --upgrade to upgrade): six>=1.4.0 in ./venv/lib/python2.7/site-packages (from unittest-xml-reporting)
-Installing collected packages: unittest-xml-reporting
-Successfully installed unittest-xml-reporting-2.1.0
