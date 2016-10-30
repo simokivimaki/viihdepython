@@ -13,4 +13,3 @@ default_task = "publish"
 @init
 def set_properties(project):
     project.depends_on("requests")
-    pass
