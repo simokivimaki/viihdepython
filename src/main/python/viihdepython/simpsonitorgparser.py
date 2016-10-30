@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import, division, print_function, unicode_literals
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -13,7 +14,7 @@ def parse_schedule():
     till_year = datetime.today().year
     for year in range(from_year, till_year+1):
         schedules.extend(parse_year(session, year))
-    print 'Simpsonit.org: Done.'
+    print('Simpsonit.org: Done.')
     return schedules
 
 
@@ -25,7 +26,7 @@ def parse_year(session, year):
     for listing_table in soup.find_all('table', class_='tv-archive'):
         for tr in listing_table.find_all('tr'):
             schedules.extend(handle_schedule_tr(tr))
-    print 'Simpsonit.org: Found', len(schedules), 'schedules for year', year
+    print('Simpsonit.org: Found', len(schedules), 'schedules for year', year)
     return schedules
 
 
@@ -53,4 +54,4 @@ def handle_schedule_tr(tr):
 
 # for testing
 if __name__ == '__main__':
-    print parse_schedule()
+    print(parse_schedule())

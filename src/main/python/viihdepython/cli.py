@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import absolute_import, division, print_function, unicode_literals
 import sys
 import getpass
 import argparse
+from user_input import get_input
 
 
 def init_argparser():
@@ -14,20 +15,27 @@ def init_argparser():
 
 def read_from_file(filename):
     with open(filename, "r") as f:
-        # assuming utf-8 encoded file
-        return f.read().decode('utf-8')
+        return f.read()
 
 
 def read_input(param, question, default=None):
     result = param
     if result is None:
-        result = raw_input(question + ': ')
+        result = get_input(question + ': ')
     if result:
-        return result.decode(sys.stdin.encoding)
+        if sys.hexversion > 0x03000000:
+            #if python3
+            return result
+        else:
+            return result.decode(sys.stdin.encoding)
     return default
 
 
 def read_password(passfileparam, question):
     if passfileparam is not None:
         return read_from_file(passfileparam)
-    return getpass.getpass(question + ': ').decode(sys.stdin.encoding)
+    if sys.hexversion > 0x03000000:
+        # python3
+        return getpass.getpass(question + ': ')
+    else:
+        return getpass.getpass(question + ': ').decode(sys.stdin.encoding)
