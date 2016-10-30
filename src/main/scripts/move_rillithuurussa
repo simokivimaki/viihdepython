@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-import cli
-import elisaviihde
-import wikipedia_rillithuurussa_parser
-from user_input import get_input
+from viihdepython import cli
+from viihdepython import elisaviihde
+from viihdepython import wikipedia_rillithuurussa_parser
+from viihdepython.user_input import get_input
 
 
 def main():

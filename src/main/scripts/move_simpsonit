@@ -6,7 +6,7 @@ from viihdepython import elisaviihde
 from viihdepython import simpsonitorgparser
 from __future__ import absolute_import, division, print_function, unicode_literals
 from datetime import datetime
-from user_input import get_input
+from viihdepython.user_input import get_input
 
 
 
