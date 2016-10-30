@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import sys
 import getpass
 import argparse
-from user_input import get_input
+from viihdepython.user_input import get_input
 
 
 def init_argparser():
