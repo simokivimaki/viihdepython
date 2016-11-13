@@ -41,7 +41,7 @@ Siirtää Simpsonit-kansion tallenteet alikansioihin kausien mukaisesti.
 Käyttää simpsonit.orgin tietoja jaotteluun.
 
 move_rillithuurussa
-___________________
+-------------------
 
 Siirtää Rillit Huurussa -kansion tallenteet alikansioihin kausien mukaisesti.
 Käyttää https://fi.wikipedia.org/wiki/Luettelo_televisiosarjan_Rillit_huurussa_jaksoista
