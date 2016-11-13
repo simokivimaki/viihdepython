@@ -17,7 +17,12 @@ Mahdolliset komentoriviparametrit saa näkyviin -h vivulla.
 asennus
 -------
 
-`pip install git+https://github.com/kattelus/viihdepython.git`
+`pip install git+https://github.com/simokivimaki/viihdepython.git`
+
+macOS:n mukana tuleva python2 ei sisällä pip:ä, joten asenna ensin python3
+lataamalla asennuspaketti osoitteesta https://www.python.org/downloads/mac-osx/
+tai käyttämällä esim. Homebrew-pakettienhallintaa. Asennuksen jälkeen
+pip3-komento on käytössä.
 
 delete_duplicates
 -----------------
