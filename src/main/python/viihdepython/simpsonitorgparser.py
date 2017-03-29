@@ -22,7 +22,7 @@ def parse_schedule():
 def parse_year(session, year):
     schedules = []
     url = 'http://simpsonit.org/jaksot/tv-esitykset-suomessa/' + str(year)
-    soup = BeautifulSoup(session.get(url).content)
+    soup = BeautifulSoup(session.get(url).content, 'html.parser')
     for listing_table in soup.find_all('table', class_='tv-archive'):
         for tr in listing_table.find_all('tr'):
             schedules.extend(handle_schedule_tr(tr))

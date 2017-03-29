@@ -81,11 +81,9 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
     def create_subfolder(self, foldername, parentid):
         headers = {'Content-Type': 'application/json'}
         data = {'parentId': parentid, 'folderName': foldername}
-        r = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
-        newfolderid = int(r.text)
-        print('Created folder', foldername, ':', newfolderid)
-        time.sleep(1) # find_folder_by_id might not find recently created folder
-        return self.find_folder_by_id(newfolderid)
+        folders = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
+        print('Created folder', foldername)
+        return find_folder_recursive(folders, 'name', foldername)
 
     def move(self, programid, folderid):
         params = {'folderId': folderid}
