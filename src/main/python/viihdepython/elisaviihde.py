@@ -83,7 +83,9 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
         data = {'parentId': parentid, 'folderName': foldername}
         folders = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
         print('Created folder', foldername)
-        return find_folder_recursive(folders, 'name', foldername)
+        # return the created folder
+        parent_folder = find_folder_recursive(folders, 'id', parentid);
+        return find_folder_recursive(parent_folder['folders'], 'name', foldername)
 
     def move(self, programid, folderid):
         params = {'folderId': folderid}

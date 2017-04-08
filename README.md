@@ -47,14 +47,17 @@ Siirtää Rillit Huurussa -kansion tallenteet alikansioihin kausien mukaisesti.
 Käyttää https://fi.wikipedia.org/wiki/Luettelo_televisiosarjan_Rillit_huurussa_jaksoista
 -sivua tietojen jaotteluun.
 
-kaantaminen ja kehittaminen (esimerkki linux fishshell)
+kaantaminen ja kehittaminen
 -------------------------------------------------------
 
 ```
 virtualenv venv
-source venv/bin/activate.fish
+source venv/bin/activate
 pip install pybuilder
-pyb install_dependencies install
+pyb install_dependencies
+
+pyb
+target/dist/viihdepython-1.0.dev0/scripts/delete_duplicates etc.
 ```
 
 Katso [pybuilder](http://pybuilder.github.io/)
