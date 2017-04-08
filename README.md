@@ -54,9 +54,8 @@ kaantaminen ja kehittaminen
 virtualenv venv
 source venv/bin/activate
 pip install pybuilder
-pyb install_dependencies
+pyb install_dependencies install
 
-pyb
 target/dist/viihdepython-1.0.dev0/scripts/delete_duplicates etc.
 ```
 
