@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from viihdepython.user_input import get_input
+from viihdepython import cli
+from viihdepython import elisaviihde
+import re
+
+def main():
+    parser = cli.init_argparser()
+    parser.add_argument('-f', '--folder_name')
+    parser.add_argument('-m', '--max_auto_delete')
+    parser.add_argument('-s', '--search_term', action='append')
+    params = parser.parse_args()
+
+    username = cli.read_input(params.user, 'Elisa Viihde Username')
+    password = cli.read_password(params.passfile, 'Elisa Viihde Password')
+
+    print('Searching with key terms: ', params.search_term)
+
+    e = elisaviihde.Elisaviihde()
+    if not e.login(username, password):
+        return
+          
+    folder_name = cli.read_input(params.folder_name, 'Look from folder (enter for all)')
+    if folder_name:
+        folder = e.find_folder_by_name(folder_name)
+        if folder is None:
+            print('Folder', folder_name, 'not found')
+            return
+    else:
+        folder = e.find_folder_by_id(0)
+
+    recordings = e.ls_recordings_recursive(folder, [])
+    matching_recordings = find(recordings, params.search_term)
+    
+    answer = 'n'
+    if params.max_auto_delete is not None:
+        if len(matching_recordings) <= int(params.max_auto_delete):
+            answer = 'y'
+    elif len(matching_recordings) > 0:
+        answer = get_input("Enter 'y' to delete matching recordings, anything else to cancel: ")
+    
+    if answer == 'y':
+        for recording in matching_recordings:
+            title = recording['name'].strip() + ": " + recording.get('description', '').strip()
+            print('Processing:', title)
+            status = e.delete(recording['programId'])
+            print('DELETED', status, title)
+        print('Delete recordings done.')
+    else:
+        print('Delete matching recordings canceled.')
+        exit(-1)
+  
+def recording_matches(recording, search_terms):
+    title = recording['name'].strip().lower() + ": " + recording.get('description', '').strip().lower()
+    for search_term in search_terms:
+        if not re.search(search_term, title):
+            return False
+    return True
+
+def find(recordings, search_terms):
+    results = [recording for recording in recordings if recording_matches(recording, search_terms)]
+    for recording in results:
+        print(recording['startTime'], recording['channel'], recording['name'], recording.get('description',''))
+
+    return results
+
+
+if __name__ == '__main__':
+    main()

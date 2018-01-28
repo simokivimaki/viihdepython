@@ -24,6 +24,15 @@ lataamalla asennuspaketti osoitteesta https://www.python.org/downloads/mac-osx/
 tai käyttämällä esim. Homebrew-pakettienhallintaa. Asennuksen jälkeen
 pip3-komento on käytössä.
 
+viihde_delete
+-------------
+
+Antaa mahdollisuuden poistaa hakuehtojen perusteella tallenteista haluttuja ohjelmia. 
+Esim. jos halutaan poistaa Walking Dead kauden 1 tallenteet voidaan käyttää
+hakuehtoina 'walking dead' ja 'kausi 1'.
+
+Jos annetaan useita hakuehtoja ne yhdistetään AND logiikalla.
+
 delete_duplicates
 -----------------
 
