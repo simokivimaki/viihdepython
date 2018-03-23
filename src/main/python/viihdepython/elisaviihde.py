@@ -81,10 +81,11 @@ thumbnailUrl: "//thumbs.elisaviihde.fi/thumbnails/1902642.jpg"
     def create_subfolder(self, foldername, parentid):
         headers = {'Content-Type': 'application/json'}
         data = {'parentId': parentid, 'folderName': foldername}
-        folders = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
+        result = self.session.put(Elisaviihde.url + 'tallenteet/api/folder', headers=headers, data=json.dumps(data))
         print('Created folder', foldername)
         # return the created folder
-        parent_folder = find_folder_recursive(folders, 'id', parentid);
+        folders = result.json()['folders']
+        parent_folder = find_folder_recursive(folders, 'id', parentid)
         return find_folder_recursive(parent_folder['folders'], 'name', foldername)
 
     def move(self, programid, folderid):
