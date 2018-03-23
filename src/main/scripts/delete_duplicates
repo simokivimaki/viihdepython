@@ -60,7 +60,8 @@ def find_duplicates(recordings):
     # arrange programs as hastable {(name, description): [recording, recording], ...}
     recordings_dict = {}
     for recording in recordings:
-        key = (recording['name'].strip(), recording.get('description', '').strip())
+        key = (recording['name'].strip(),
+               recording.get('description', '').replace('(u)', '').strip())
         value = recordings_dict.get(key, [])
         value.append(recording)
         recordings_dict[key] = value
